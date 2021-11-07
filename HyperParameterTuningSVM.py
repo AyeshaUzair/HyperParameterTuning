@@ -18,6 +18,7 @@ from skopt import BayesSearchCV
 from sklearn.svm import SVC, SVR
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
 from skopt.space import Real, Categorical, Integer
+from time import time
 
 
 # Import Dataset
@@ -101,6 +102,7 @@ param_grid_non_linear = {'C': [0.1, 1, 10],
 
 
 # Random Search CV
+st1 = time()
 tuning_random = RandomizedSearchCV(SVC(), 
                                     param_grid,
                                     scoring="accuracy", 
@@ -109,43 +111,55 @@ tuning_random = RandomizedSearchCV(SVC(),
                                     refit = True,
                                     verbose=2,
                                     random_state=0) 
+et1 = time()
+total_time_1 = et1 - st1
 tuning_random.fit(X_train,y_train)
 print("\n\n--------------------------------------------------------------------------")
 print("Random Search")
 print(tuning_random.best_params_)
 print(tuning_random.best_score_)
 print(tuning_random.best_estimator_)
+print("Time Taken for Random Search: ", total_time_1)
 print("\n\n--------------------------------------------------------------------------")
     
 
 # Grid Search CV
+st2 = time()
 tuning_grid = GridSearchCV(SVC(), 
                           param_grid,
                           scoring="accuracy",
+                          cv=5,
                           n_jobs=-1,
                           verbose=2)
+et2 = time()
+total_time_2 = et2 - st2
 tuning_grid.fit(X_train,y_train)
 print("\n\n--------------------------------------------------------------------------")
 print("Grid Search")
 print(tuning_grid.best_params_)
 print(tuning_grid.best_score_)
 print(tuning_grid.best_estimator_)
+print("Time Taken for Grid Search: ", total_time_2)
 print("\n\n--------------------------------------------------------------------------")
 
 
 # Bayes Search CV
+st3 = time()
 tuning_bayes = BayesSearchCV(SVC(),
                           param_grid,
                           scoring="accuracy",
                           cv=5,
                           n_jobs=-1,
                           verbose=2)
+et3 = time()
+total_time_3 = et3 - st3
 tuning_bayes.fit(X_train,y_train)
 print("\n\n--------------------------------------------------------------------------")
 print("Bayes Search")
 print(tuning_bayes.best_params_)
 print(tuning_bayes.best_score_)
 print(tuning_bayes.best_estimator_)
+print("Time Taken for Bayes Search: ", total_time_3)
 print("\n\n--------------------------------------------------------------------------")
 
 
